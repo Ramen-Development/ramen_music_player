@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 class Player extends StatefulWidget {
   const Player({Key? key}) : super(key: key);
@@ -8,6 +9,33 @@ class Player extends StatefulWidget {
 }
 
 class _PlayerState extends State<Player> {
+  final player = AudioPlayer();
+  @override
+  void initState() {
+    super.initState();
+
+    // Set a sequence of audio sources that will be played by the audio player.
+    player
+        .setAudioSource(ConcatenatingAudioSource(children: [
+      AudioSource.uri(Uri.parse(
+          "https://archive.org/download/IGM-V7/IGM%20-%20Vol.%207/25%20Diablo%20-%20Tristram%20%28Blizzard%29.mp3")),
+      AudioSource.uri(Uri.parse(
+          "https://archive.org/download/igm-v8_202101/IGM%20-%20Vol.%208/15%20Pokemon%20Red%20-%20Cerulean%20City%20%28Game%20Freak%29.mp3")),
+      AudioSource.uri(Uri.parse(
+          "https://scummbar.com/mi2/MI1-CD/01%20-%20Opening%20Themes%20-%20Introduction.mp3")),
+    ]))
+        .catchError((error) {
+      // catch load errors: 404, invalid url ...
+      print("An error occured $error");
+    });
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -55,34 +83,55 @@ class _PlayerState extends State<Player> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.shuffle,
-              ),
+          children: [
+            StreamBuilder<bool>(
+              stream: player.shuffleModeEnabledStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return _shuffleButton(context, snapshot.data ?? false);
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.skip_previous,
-              ),
+            StreamBuilder<SequenceState?>(
+              stream: player.sequenceStateStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return _previousButton();
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
-            FloatingActionButton(
-              onPressed: null,
-              child: Icon(Icons.play_arrow),
+            StreamBuilder<PlayerState>(
+                stream: player.playerStateStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return _playerButton(snapshot.data!);
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                }),
+            StreamBuilder<SequenceState?>(
+              stream: player.sequenceStateStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return _nextButton();
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.skip_next,
-              ),
-            ),
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.repeat,
-              ),
+            StreamBuilder<LoopMode>(
+              stream: player.loopModeStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return _repeatButton(context, snapshot.data ?? LoopMode.off);
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
           ],
         ),
@@ -116,6 +165,79 @@ class _PlayerState extends State<Player> {
           onChanged: null,
         ),
       ],
+    );
+  }
+
+  Widget _playerButton(PlayerState playerState) {
+    // 1
+    final processingState = playerState.processingState;
+    if (processingState == ProcessingState.loading ||
+        processingState == ProcessingState.buffering) {
+      return const CircularProgressIndicator();
+    } else {
+      if (player.playing != true) {
+        // 3
+        return FloatingActionButton(
+          child: const Icon(Icons.play_arrow),
+          onPressed: player.play,
+        );
+      } else {
+        // 4
+        return FloatingActionButton(
+          child: const Icon(Icons.pause),
+          onPressed: player.pause,
+        );
+      }
+    }
+  }
+
+  Widget _shuffleButton(BuildContext context, bool isEnabled) {
+    return IconButton(
+      icon: isEnabled
+          ? Icon(Icons.shuffle, color: Theme.of(context).colorScheme.secondary)
+          : const Icon(Icons.shuffle),
+      onPressed: () async {
+        final enable = !isEnabled;
+        if (enable) {
+          await player.shuffle();
+        }
+        await player.setShuffleModeEnabled(enable);
+      },
+    );
+  }
+
+  Widget _previousButton() {
+    return IconButton(
+      icon: const Icon(Icons.skip_previous),
+      onPressed: player.hasPrevious ? player.seekToPrevious : null,
+    );
+  }
+
+  Widget _nextButton() {
+    return IconButton(
+      icon: const Icon(Icons.skip_next),
+      onPressed: player.hasNext ? player.seekToNext : null,
+    );
+  }
+
+  Widget _repeatButton(BuildContext context, LoopMode loopMode) {
+    final icons = [
+      const Icon(Icons.repeat),
+      Icon(Icons.repeat, color: Theme.of(context).colorScheme.secondary),
+      Icon(Icons.repeat_one, color: Theme.of(context).colorScheme.secondary),
+    ];
+    const cycleModes = [
+      LoopMode.off,
+      LoopMode.all,
+      LoopMode.one,
+    ];
+    final index = cycleModes.indexOf(loopMode);
+    return IconButton(
+      icon: icons[index],
+      onPressed: () {
+        player.setLoopMode(
+            cycleModes[(cycleModes.indexOf(loopMode) + 1) % cycleModes.length]);
+      },
     );
   }
 }
