@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "93538098342",
+    "project_id": "ramen-music-player",
+    "storage_bucket": "ramen-music-player.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93538098342:android:253f0db9f1ac4b0338a867",
+        "android_client_info": {
+          "package_name": "dev.ramenmx.ramen_music_player"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93538098342-e9giklq9vu05dgpf4i1rc3vds83i76ep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxvnLrCPj-U06UFkZZweGPWzcUKbb9Qsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93538098342-e9giklq9vu05dgpf4i1rc3vds83i76ep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "93538098342-c320tor6me6ar3m8gagfr41u9sc8r919.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.ramenmx.ramenmp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
