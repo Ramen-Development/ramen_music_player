@@ -21,6 +21,7 @@ class SignInPage extends StatelessWidget {
           ),
           TextField(
             controller: passwordController,
+            obscureText: true,
             decoration: const InputDecoration(
               labelText: "Password",
             ),

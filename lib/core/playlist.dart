@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:ramen_music_player/core/player.dart';
 
 class Playlist extends StatefulWidget {
   const Playlist({Key? key}) : super(key: key);
@@ -24,6 +25,11 @@ class _PlaylistState extends State<Playlist> {
                   return Column(
                     children: [
                       ListTile(
+                        onTap: () async => {
+                          await songList!.items[index]
+                              .getDownloadURL()
+                              .then((value) => setSong(value))
+                        },
                         leading: const Icon(
                           Icons.music_note,
                         ),

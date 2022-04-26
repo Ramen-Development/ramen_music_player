@@ -8,21 +8,18 @@ class Player extends StatefulWidget {
   State<Player> createState() => _PlayerState();
 }
 
+final player = AudioPlayer();
+
 class _PlayerState extends State<Player> {
-  final player = AudioPlayer();
   @override
   void initState() {
     super.initState();
-
-    // Set a sequence of audio sources that will be played by the audio player.
     player
         .setAudioSource(ConcatenatingAudioSource(children: [
       AudioSource.uri(Uri.parse(
-          "https://archive.org/download/IGM-V7/IGM%20-%20Vol.%207/25%20Diablo%20-%20Tristram%20%28Blizzard%29.mp3")),
+          "https://firebasestorage.googleapis.com/v0/b/ramen-music-player.appspot.com/o/songs%2FKevin%20MacLeod%20-%20Impact%20Prelude.mp3?alt=media&token=36f60e83-350a-46eb-a650-3ffa6fc0c597")),
       AudioSource.uri(Uri.parse(
-          "https://archive.org/download/igm-v8_202101/IGM%20-%20Vol.%208/15%20Pokemon%20Red%20-%20Cerulean%20City%20%28Game%20Freak%29.mp3")),
-      AudioSource.uri(Uri.parse(
-          "https://scummbar.com/mi2/MI1-CD/01%20-%20Opening%20Themes%20-%20Introduction.mp3")),
+          "https://firebasestorage.googleapis.com/v0/b/ramen-music-player.appspot.com/o/songs%2FKevin%20MacLeod%20-%20Impact%20Andante.mp3?alt=media&token=5f87219e-7459-4ea9-9007-70a3ea84d5f4")),
     ]))
         .catchError((error) {
       // catch load errors: 404, invalid url ...
@@ -240,4 +237,8 @@ class _PlayerState extends State<Player> {
       },
     );
   }
+}
+
+setSong(uri) async {
+  await player.setAudioSource(ProgressiveAudioSource(Uri.parse(uri)));
 }
