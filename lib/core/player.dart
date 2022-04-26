@@ -26,7 +26,7 @@ class _PlayerState extends State<Player> {
     ]))
         .catchError((error) {
       // catch load errors: 404, invalid url ...
-      print("An error occured $error");
+      throw ("An error occured $error");
     });
   }
 

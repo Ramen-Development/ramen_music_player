@@ -6,6 +6,8 @@ class SignInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  SignInPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,24 +15,24 @@ class SignInPage extends StatelessWidget {
         children: [
           TextField(
             controller: emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Email",
             ),
           ),
           TextField(
             controller: passwordController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Password",
             ),
           ),
-          RaisedButton(
+          ElevatedButton(
             onPressed: () {
               context.read<AuthenticationService>().signIn(
                     email: emailController.text.trim(),
                     password: passwordController.text.trim(),
                   );
             },
-            child: Text("Sign in"),
+            child: const Text("Sign in"),
           )
         ],
       ),
