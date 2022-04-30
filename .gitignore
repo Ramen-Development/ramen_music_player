@@ -9,6 +9,10 @@
 .history
 .svn/
 
+lib/firebase_options.dart
+ios/firebase_app_id_file.json
+android/app/google-services.json
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -33,6 +37,7 @@
 
 # Web related
 lib/generated_plugin_registrant.dart
+
 
 # Symbolication related
 app.*.symbols

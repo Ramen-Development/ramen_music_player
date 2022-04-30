@@ -1,4 +1,4 @@
-import 'package:ramen_music_player/authentication_service.dart';
+import 'package:ramen_music_player/login-logout-services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,12 +28,24 @@ class SignInPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              context.read<AuthenticationService>().signIn(
+              context.read<AuthenticationService>().signInEmail(
                     email: emailController.text.trim(),
                     password: passwordController.text.trim(),
                   );
             },
             child: const Text("Sign in"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<AuthenticationService>().signInWithGoogle();
+            },
+            child: const Text("Sign in with Google"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<AuthenticationService>().signInWithFacebook();
+            },
+            child: const Text("Sign in with Facebook"),
           )
         ],
       ),
