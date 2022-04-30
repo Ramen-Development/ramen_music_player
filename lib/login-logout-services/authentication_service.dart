@@ -24,7 +24,7 @@ class AuthenticationService {
       await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       return "Signed in";
     } on FirebaseAuthException catch (e) {
-      return e.message.toString();
+      return null;
     }
   }
 

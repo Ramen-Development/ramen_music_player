@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ramen_music_player/login-logout-services/authentication_service.dart';
 import 'package:ramen_music_player/home/home.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ramen_music_player/login-logout-services/sign_in_page.dart';
+import 'package:ramen_music_player/login-logout-services/log_in_page.dart';
 import 'firebase_options.dart';
 import 'package:flutter/foundation.dart' show kIsWeb; 
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'; 
@@ -64,6 +64,6 @@ class AuthenticationWrapper extends StatelessWidget {
     if (firebaseUser != null) {
       return const Home();
     }
-    return SignInPage();
+    return LogInPage();
   }
 }
