@@ -34,7 +34,9 @@ class LogInPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 controller: emailController,
-                validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email",
+                validator: (value) => EmailValidator.validate(value)
+                    ? null
+                    : "Please enter a valid email",
                 decoration: const InputDecoration(
                     border: const OutlineInputBorder(),
                     labelText: 'Email',
@@ -54,8 +56,10 @@ class LogInPage extends StatelessWidget {
                     hintText: 'Enter secure password'),
               ),
             ),
-            FlatButton(
-              padding: const EdgeInsets.only(top: 30, bottom: 30),
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.only(top: 30, bottom: 30),
+              ),
               onPressed: () {
                 //TODO FORGOT PASSWORD SCREEN GOES HERE
               },
@@ -69,10 +73,11 @@ class LogInPage extends StatelessWidget {
               width: 250,
               decoration: BoxDecoration(
                   color: Colors.grey, borderRadius: BorderRadius.circular(20)),
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () {
                   // ignore: unrelated_type_equality_checks
-                  final signed = context.read<AuthenticationService>().signInEmail(
+                  final signed =
+                      context.read<AuthenticationService>().signInEmail(
                             email: emailController.text.trim(),
                             password: passwordController.text.trim(),
                           );
@@ -85,7 +90,7 @@ class LogInPage extends StatelessWidget {
                           title: const Text('Error'),
                           content: SingleChildScrollView(
                             child: ListBody(
-                              children: const  <Widget>[
+                              children: const <Widget>[
                                 Text('Email or Password incorrect!'),
                                 Text('Check you data.')
                               ],
@@ -116,7 +121,7 @@ class LogInPage extends StatelessWidget {
               width: 250,
               decoration: BoxDecoration(
                   color: Colors.grey, borderRadius: BorderRadius.circular(20)),
-              child: FlatButton(
+              child: TextButton(
                   onPressed: () {
                     context.read<AuthenticationService>().signInWithFacebook();
                   },
@@ -141,7 +146,7 @@ class LogInPage extends StatelessWidget {
               width: 250,
               decoration: BoxDecoration(
                   color: Colors.grey, borderRadius: BorderRadius.circular(20)),
-              child: FlatButton(
+              child: TextButton(
                   onPressed: () {
                     context.read<AuthenticationService>().signInWithGoogle();
                   },
