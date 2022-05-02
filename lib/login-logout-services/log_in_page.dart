@@ -2,7 +2,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ramen_music_player/login-logout-services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:email_validator/email_validator.dart';
 
 class LogInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -34,9 +33,6 @@ class LogInPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 controller: emailController,
-                validator: (value) => EmailValidator.validate(value)
-                    ? null
-                    : "Please enter a valid email",
                 decoration: const InputDecoration(
                     border: const OutlineInputBorder(),
                     labelText: 'Email',
@@ -75,13 +71,13 @@ class LogInPage extends StatelessWidget {
                   color: Colors.grey, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  // ignore: unrelated_type_equality_checks
-                  final signed =
+                  Future<String?> signed =
                       context.read<AuthenticationService>().signInEmail(
                             email: emailController.text.trim(),
                             password: passwordController.text.trim(),
                           );
-                  if (signed == null) {
+                  // ignore: unrelated_type_equality_checks
+                  if (signed != "Signed in") {
                     showDialog<void>(
                       context: context,
                       barrierDismissible: false, // user must tap button!

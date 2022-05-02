@@ -16,6 +16,7 @@ class AuthenticationService {
 
   Future<void> signOut() async {
     await googleSignIn.disconnect();
+    await FacebookAuth.i.logOut();
     await firebaseAuth.signOut();
   }
 
@@ -24,7 +25,7 @@ class AuthenticationService {
       await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       return "Signed in";
     } on FirebaseAuthException catch (e) {
-      return null;
+      return e.message.toString();
     }
   }
 
