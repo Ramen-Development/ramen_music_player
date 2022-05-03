@@ -2,6 +2,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ramen_music_player/login-logout-services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ramen_music_player/login-logout-services/signup_page.dart';
 
 class LogInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -71,39 +72,12 @@ class LogInPage extends StatelessWidget {
                   color: Colors.grey, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  Future<String?> signed =
                       context.read<AuthenticationService>().signInEmail(
                             email: emailController.text.trim(),
                             password: passwordController.text.trim(),
-                          );
-                  // ignore: unrelated_type_equality_checks
-                  if (signed != "Signed in") {
-                    showDialog<void>(
-                      context: context,
-                      barrierDismissible: false, // user must tap button!
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Error'),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: const <Widget>[
-                                Text('Email or Password incorrect!'),
-                                Text('Check you data.')
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('OK'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
+                            c: context
+                      );
+                          
                 },
                 child: const Text(
                   'Login',
@@ -165,7 +139,15 @@ class LogInPage extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            const Text('New User? Create Account')
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+              },
+              child: const Text(
+                'New Ramen user? Create account!',
+                style: TextStyle(color: Color.fromARGB(143, 225, 172, 38), fontSize: 15),
+              ),
+            ),
           ],
         ),
       ),
