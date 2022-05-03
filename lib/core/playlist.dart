@@ -28,7 +28,7 @@ class _PlaylistState extends State<Playlist> {
                   return Column(
                     children: [
                       ListTile(
-                        onTap: () async => {setSong(song.file)},
+                        onTap: () async => {setSong(song)},
                         leading: const Icon(
                           Icons.music_note,
                         ),

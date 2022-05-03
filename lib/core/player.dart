@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:ramen_music_player/core/song.dart';
 
 class Player extends StatefulWidget {
   const Player({Key? key}) : super(key: key);
@@ -9,6 +10,9 @@ class Player extends StatefulWidget {
 }
 
 final player = AudioPlayer();
+String songName = "";
+String artist = "";
+String cover = "";
 
 class _PlayerState extends State<Player> {
   @override
@@ -35,6 +39,7 @@ class _PlayerState extends State<Player> {
 
   @override
   Widget build(BuildContext context) {
+    _timer();
     return BottomAppBar(
       child: Container(
         padding: const EdgeInsets.all(8),
@@ -62,7 +67,7 @@ class _PlayerState extends State<Player> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [Text("Nombre cancion"), Text("Artista")],
+            children: [Text(songName), Text(artist)],
           ),
         ),
         const IconButton(
@@ -136,7 +141,15 @@ class _PlayerState extends State<Player> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              player.position.toString(),
+              player.position.inMinutes
+                      .remainder(60)
+                      .toString()
+                      .padLeft(2, "0") +
+                  ":" +
+                  player.position.inSeconds
+                      .remainder(60)
+                      .toString()
+                      .padLeft(2, "0"),
             ),
             Slider(
               value: player.position.inSeconds.toDouble(),
@@ -150,7 +163,17 @@ class _PlayerState extends State<Player> {
                   : player.duration!.inSeconds.toDouble(),
             ),
             Text(
-              player.duration.toString(),
+              player.duration?.inSeconds == null
+                  ? "00:00"
+                  : player.duration!.inMinutes
+                          .remainder(60)
+                          .toString()
+                          .padLeft(2, "0") +
+                      ":" +
+                      player.duration!.inSeconds
+                          .remainder(60)
+                          .toString()
+                          .padLeft(2, "0"),
             ),
           ],
         ),
@@ -253,8 +276,17 @@ class _PlayerState extends State<Player> {
       },
     );
   }
+
+  void _timer() {
+    Future.delayed(Duration(seconds: 1)).then((_) {
+      setState(() {});
+      _timer();
+    });
+  }
 }
 
-setSong(uri) async {
-  await player.setAudioSource(ProgressiveAudioSource(Uri.parse(uri)));
+setSong(Song song) async {
+  await player.setAudioSource(ProgressiveAudioSource(Uri.parse(song.file)));
+  songName = song.name;
+  artist = song.artist;
 }
