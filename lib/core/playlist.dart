@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:ramen_music_player/core/player.dart';
+import 'package:ramen_music_player/core/song.dart';
 
 class Playlist extends StatefulWidget {
   const Playlist({Key? key}) : super(key: key);
@@ -10,30 +11,29 @@ class Playlist extends StatefulWidget {
 }
 
 class _PlaylistState extends State<Playlist> {
-  final songsRef = FirebaseStorage.instance
-      .refFromURL("gs://ramen-music-player.appspot.com/songs");
+  final songsRef = FirebaseDatabase.instance.ref("songs/");
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ListResult>(
-        future: songsRef.listAll(),
+    return FutureBuilder<DatabaseEvent>(
+        future: songsRef.once(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            ListResult? songList = snapshot.data;
+            DataSnapshot snap = snapshot.data!.snapshot;
+            List<DataSnapshot> songList = snap.children.toList();
             return ListView.builder(
-                itemCount: songList?.items.length,
+                itemCount: songList.length,
                 itemBuilder: (context, index) {
+                  Song song = Song.fromJson(
+                      songList.elementAt(index).value as Map<String, dynamic>);
                   return Column(
                     children: [
                       ListTile(
-                        onTap: () async => {
-                          await songList!.items[index]
-                              .getDownloadURL()
-                              .then((value) => setSong(value))
-                        },
+                        onTap: () async => {setSong(song.file)},
                         leading: const Icon(
                           Icons.music_note,
                         ),
-                        title: Text(songList!.items[index].name),
+                        title: Text(song.name),
+                        subtitle: Text(song.artist),
                       ),
                       const Divider(),
                     ],

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_const
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ramen_music_player/login-logout-services/authentication_service.dart';
 import 'package:flutter/material.dart';
@@ -72,12 +74,10 @@ class LogInPage extends StatelessWidget {
                   color: Colors.grey, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                      context.read<AuthenticationService>().signInEmail(
-                            email: emailController.text.trim(),
-                            password: passwordController.text.trim(),
-                            c: context
-                      );
-                          
+                  context.read<AuthenticationService>().signInEmail(
+                      email: emailController.text.trim(),
+                      password: passwordController.text.trim(),
+                      c: context);
                 },
                 child: const Text(
                   'Login',
@@ -141,11 +141,13 @@ class LogInPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()));
               },
               child: const Text(
                 'New Ramen user? Create account!',
-                style: TextStyle(color: Color.fromARGB(143, 225, 172, 38), fontSize: 15),
+                style: TextStyle(
+                    color: Color.fromARGB(143, 225, 172, 38), fontSize: 15),
               ),
             ),
           ],

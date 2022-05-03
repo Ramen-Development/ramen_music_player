@@ -57,7 +57,7 @@ class SignUpPage extends StatelessWidget {
               child: TextFormField(
                 controller: usernameController,
                 decoration: const InputDecoration(
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                     labelText: 'Name',
                     hintText: 'Enter your username'),
               ),
@@ -69,7 +69,7 @@ class SignUpPage extends StatelessWidget {
               child: TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                     labelText: 'Email',
                     hintText: 'Enter valid email id as abc@gmail.com'),
               ),
@@ -109,7 +109,7 @@ class SignUpPage extends StatelessWidget {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  var snackBar;
+                  SnackBar snackBar;
                   if (passwordController.text.trim() ==
                       passwordCopyController.text.trim()) {
                     context.read<AuthenticationService>().signUp(

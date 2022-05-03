@@ -163,7 +163,7 @@ class _PlayerState extends State<Player> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
+        const IconButton(
           onPressed: null,
           icon: Icon(Icons.volume_up),
         ),
