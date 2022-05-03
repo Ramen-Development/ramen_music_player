@@ -61,7 +61,7 @@ class LogInPage extends StatelessWidget {
                 //TODO FORGOT PASSWORD SCREEN GOES HERE
               },
               child: const Text(
-                'Forgot Password',
+                'Forgot Password?',
                 style: TextStyle(color: Colors.blue, fontSize: 15),
               ),
             ),

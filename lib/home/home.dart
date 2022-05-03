@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ramen_music_player/core/player.dart';
-
+import 'package:ramen_music_player/login-logout-services/authentication_service.dart';
+import 'package:ramen_music_player/login-logout-services/log_in_page.dart';
 import '../core/playlist.dart';
 
 class Home extends StatefulWidget {
@@ -13,16 +15,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    context.read<AuthenticationService>().sendVerificationEmail(context);
     return Scaffold(
       appBar: AppBar(
         leading: Image.asset('assets/images/ramendev.png'),
         title: const Text("Ramen Music Player"),
-        actions: const [
+        actions: [
           IconButton(
-            onPressed: null,
-            icon: Icon(Icons.logout),
+            onPressed: () {
+              context.read<AuthenticationService>().signOut();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
+            },
+            icon: const Icon(Icons.logout),
           ),
-          IconButton(onPressed: null, icon: Icon(Icons.question_mark))
+          const IconButton(onPressed: null, icon: Icon(Icons.question_mark))
         ],
       ),
       body: const Playlist(),

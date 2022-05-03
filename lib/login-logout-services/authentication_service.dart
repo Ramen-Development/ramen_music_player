@@ -26,11 +26,7 @@ class AuthenticationService {
   Future<String?> signInEmail({required String email, required String password,required BuildContext c}) async {
     try {
       await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      final isEmailVerified = firebaseAuth.currentUser!.emailVerified;
-      if(!isEmailVerified)
-      {
-        sendVerificationEmail(c);
-      }
+      sendVerificationEmail(c);
       return "Signed in";
     } on FirebaseAuthException catch (e) {
       popSnackBar(c, e.message.toString(), "OK");
@@ -71,11 +67,15 @@ Future<UserCredential> signInWithFacebook() async {
 }
 
   Future<void> sendVerificationEmail(BuildContext context) async{
-    try{
-      await firebaseAuth.currentUser?.sendEmailVerification();
-      popSnackBar(context, "Verify your email!", "OK");
-    }catch(e){
-      popSnackBar(context, e.toString(), "OK");
+    final isEmailVerified = firebaseAuth.currentUser!.emailVerified;
+    if(!isEmailVerified)
+    {
+      try{
+        await firebaseAuth.currentUser?.sendEmailVerification();
+        popSnackBar(context, "Verify your email!", "OK");
+      }catch(e){
+        popSnackBar(context, e.toString(), "OK");
+      }
     }
   }
 

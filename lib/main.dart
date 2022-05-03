@@ -14,11 +14,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //Borrar despues de poner boton de sign out
-  final aux = AuthenticationService(FirebaseAuth.instance);
-  aux.signOut();
-
-
+  
   // check if is running on Web
   if (kIsWeb) {
     // initialiaze the facebook javascript SDK
