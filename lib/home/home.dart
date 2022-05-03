@@ -13,9 +13,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Playlist(),
-      bottomNavigationBar: Player(),
+    return Scaffold(
+      appBar: AppBar(
+        leading: Image.asset('assets/images/ramendev.png'),
+        title: const Text("Ramen Music Player"),
+        actions: const [
+          IconButton(
+            onPressed: null,
+            icon: Icon(Icons.logout),
+          ),
+          IconButton(onPressed: null, icon: Icon(Icons.question_mark))
+        ],
+      ),
+      body: const Playlist(),
+      bottomNavigationBar: const Player(),
     );
   }
 }

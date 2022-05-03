@@ -134,14 +134,24 @@ class _PlayerState extends State<Player> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Text("0:00"),
-            Slider(
-              value: 0,
-              onChanged: null,
-              max: 260,
+          children: [
+            Text(
+              player.position.toString(),
             ),
-            Text("4:20"),
+            Slider(
+              value: player.position.inSeconds.toDouble(),
+              onChanged: (double value) {
+                setState(() {
+                  player.seek(Duration(seconds: value.round()));
+                });
+              },
+              max: player.duration?.inSeconds == null
+                  ? 0
+                  : player.duration!.inSeconds.toDouble(),
+            ),
+            Text(
+              player.duration.toString(),
+            ),
           ],
         ),
       ],
@@ -149,17 +159,23 @@ class _PlayerState extends State<Player> {
   }
 
   Row _playerConfig() {
+    double volVal = 1;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
+      children: [
         IconButton(
           onPressed: null,
           icon: Icon(Icons.volume_up),
         ),
         Slider(
-          value: 100,
-          max: 100,
-          onChanged: null,
+          value: volVal,
+          max: 1,
+          onChanged: (double value) {
+            setState(() {
+              volVal = value;
+              player.setVolume(value);
+            });
+          },
         ),
       ],
     );
