@@ -17,8 +17,18 @@ class SignUpPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+             Padding(
+              padding: const EdgeInsets.only(top: 15.0,right: 15.0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(onPressed: () {
+                  Navigator.pop(context);
+                },
+                 icon: const Icon(Icons.keyboard_return_outlined))
+                ),
+            ),
             Padding(
-              padding: const EdgeInsets.only(top: 60.0, bottom: 30.0),
+              padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
               child: Center(
                 child: Container(
                   width: 420,

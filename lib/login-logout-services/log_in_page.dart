@@ -9,6 +9,7 @@ import 'package:ramen_music_player/login-logout-services/signup_page.dart';
 class LogInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailPasswordForgotten = TextEditingController();
 
   LogInPage({Key? key}) : super(key: key);
 
@@ -60,7 +61,53 @@ class LogInPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30, bottom: 30),
               ),
               onPressed: () {
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Forgotten Password',textAlign: TextAlign.center,),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                              //padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: TextField(
+                                controller: emailPasswordForgotten,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText:
+                                        'Send a reset password',
+                                    hintText: 'Enter your email'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Send'),
+                          onPressed: () {
+                            context
+                                .read<AuthenticationService>()
+                                .forgotPassword(
+                                    email: emailPasswordForgotten.text.trim(),
+                                    c: context);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               child: const Text(
                 'Forgot Password?',
