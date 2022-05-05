@@ -20,6 +20,7 @@ class _PlaylistState extends State<Playlist> {
           if (snapshot.hasData) {
             DataSnapshot snap = snapshot.data!.snapshot;
             List<DataSnapshot> songList = snap.children.toList();
+            initPlaylist(songList);
             return ListView.builder(
                 itemCount: songList.length,
                 itemBuilder: (context, index) {
@@ -28,7 +29,7 @@ class _PlaylistState extends State<Playlist> {
                   return Column(
                     children: [
                       ListTile(
-                        onTap: () async => {setSong(song)},
+                        onTap: () async => {setSong(index)},
                         leading: const Icon(
                           Icons.music_note,
                         ),

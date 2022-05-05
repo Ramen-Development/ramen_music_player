@@ -1,5 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:ramen_music_player/core/album.dart';
 import 'package:ramen_music_player/core/song.dart';
 
 class Player extends StatefulWidget {
@@ -10,25 +12,17 @@ class Player extends StatefulWidget {
 }
 
 final player = AudioPlayer();
+List<Song> playlist = [];
+List<Album> covers = [];
 String songName = "";
 String artist = "";
 String cover = "";
 
 class _PlayerState extends State<Player> {
+  double volVal = 1;
   @override
   void initState() {
     super.initState();
-    player
-        .setAudioSource(ConcatenatingAudioSource(children: [
-      AudioSource.uri(Uri.parse(
-          "https://firebasestorage.googleapis.com/v0/b/ramen-music-player.appspot.com/o/songs%2FKevin%20MacLeod%20-%20Impact%20Prelude.mp3?alt=media&token=36f60e83-350a-46eb-a650-3ffa6fc0c597")),
-      AudioSource.uri(Uri.parse(
-          "https://firebasestorage.googleapis.com/v0/b/ramen-music-player.appspot.com/o/songs%2FKevin%20MacLeod%20-%20Impact%20Andante.mp3?alt=media&token=5f87219e-7459-4ea9-9007-70a3ea84d5f4")),
-    ]))
-        .catchError((error) {
-      // catch load errors: 404, invalid url ...
-      throw ("An error occured $error");
-    });
   }
 
   @override
@@ -61,6 +55,7 @@ class _PlayerState extends State<Player> {
           width: 50,
           height: 50,
           color: Colors.blueAccent,
+          child: cover != "" ? Image.network(cover) : null,
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -182,13 +177,14 @@ class _PlayerState extends State<Player> {
   }
 
   Row _playerConfig() {
-    double volVal = 1;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const IconButton(
-          onPressed: null,
-          icon: Icon(Icons.volume_up),
+        IconButton(
+          onPressed: () => player.volume != 0
+              ? player.setVolume(0)
+              : player.setVolume(volVal),
+          icon: const Icon(Icons.volume_up),
         ),
         Slider(
           value: volVal,
@@ -196,7 +192,7 @@ class _PlayerState extends State<Player> {
           onChanged: (double value) {
             setState(() {
               volVal = value;
-              player.setVolume(value);
+              player.setVolume(volVal);
             });
           },
         ),
@@ -245,14 +241,26 @@ class _PlayerState extends State<Player> {
   Widget _previousButton() {
     return IconButton(
       icon: const Icon(Icons.skip_previous),
-      onPressed: player.hasPrevious ? player.seekToPrevious : null,
+      onPressed: () {
+        if (player.hasPrevious) {
+          player.seekToPrevious();
+          int? idx = player.currentIndex;
+          updateMetas(idx!);
+        }
+      },
     );
   }
 
   Widget _nextButton() {
     return IconButton(
       icon: const Icon(Icons.skip_next),
-      onPressed: player.hasNext ? player.seekToNext : null,
+      onPressed: () {
+        if (player.hasNext) {
+          player.seekToNext;
+          int? idx = player.currentIndex;
+          updateMetas(idx!);
+        }
+      },
     );
   }
 
@@ -285,8 +293,41 @@ class _PlayerState extends State<Player> {
   }
 }
 
-setSong(Song song) async {
-  await player.setAudioSource(ProgressiveAudioSource(Uri.parse(song.file)));
+initPlaylist(List<DataSnapshot> songList) async {
+  List<AudioSource> songs = [];
+  for (var s in songList) {
+    Song song = Song.fromJson(s.value as Map<String, dynamic>);
+    playlist.add(song);
+    songs.add(AudioSource.uri(Uri.parse(song.file)));
+  }
+  await player
+      .setAudioSource(ConcatenatingAudioSource(children: songs))
+      .catchError((error) {
+    // catch load errors: 404, invalid url ...
+    throw ("An error occured $error");
+  });
+  await searchCovers();
+  updateMetas(0);
+}
+
+searchCovers() async {
+  final albumsRef = FirebaseDatabase.instance.ref("albums/");
+  await albumsRef.once().then((value) {
+    List<DataSnapshot> albums = value.snapshot.children.toList();
+    for (DataSnapshot album in albums) {
+      covers.add(Album.fromJson(album.value as Map<String, dynamic>));
+    }
+  });
+}
+
+setSong(int idx) async {
+  await player.seek(const Duration(milliseconds: 0), index: idx);
+  updateMetas(idx);
+}
+
+updateMetas(int idx) {
+  Song song = playlist.elementAt(idx);
   songName = song.name;
   artist = song.artist;
+  cover = covers.firstWhere((e) => e.name == song.album).cover;
 }
