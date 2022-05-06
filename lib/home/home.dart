@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ramen_music_player/core/player.dart';
 import 'package:ramen_music_player/login-logout-services/authentication_service.dart';
-import 'package:ramen_music_player/login-logout-services/log_in_page.dart';
 import '../core/playlist.dart';
 
 class Home extends StatefulWidget {
@@ -24,7 +23,6 @@ class _HomeState extends State<Home> {
           IconButton(
             onPressed: () {
               context.read<AuthenticationService>().signOut();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
             },
             icon: const Icon(Icons.logout),
           ),

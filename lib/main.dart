@@ -14,7 +14,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
   // check if is running on Web
   if (kIsWeb) {
     // initialiaze the facebook javascript SDK

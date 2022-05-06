@@ -14,18 +14,29 @@ class AuthenticationService {
   GoogleSignInAccount? _userGoogle;
   GoogleSignInAccount get userGoogle => _userGoogle!;
 
-  Stream<User?> get authStateChanges => firebaseAuth.idTokenChanges();
+  Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
+
+  String getName(){
+    final uid = auth.currentUser?.uid;
+    final query = store.collection("Users").where("uid", isEqualTo: uid).get().then((snapshot) => {
+      snapshot.docs[0]
+    });
+
+    return query.toString();
+    
+  }
 
   Future<void> signOut() async {
     try {
-      await FacebookAuth.i.logOut();
-      return;
-    } catch (a) {
       await googleSignIn.disconnect();
-      await firebaseAuth.signOut();  
-      return;
+    } catch (a) {
+      try{
+        await FacebookAuth.i.logOut();
+      }catch(a){}
+      
     }
-
+    await firebaseAuth.signOut();  
+    return;
     
   }
 
@@ -57,7 +68,7 @@ class AuthenticationService {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     // Trigger the authentication flow
     final googleUser = await GoogleSignIn().signIn();
     _userGoogle = googleUser;
@@ -73,10 +84,22 @@ class AuthenticationService {
     );
 
     // Once signed in, return the UserCredential
-    return await firebaseAuth.signInWithCredential(credential);
+    await firebaseAuth.signInWithCredential(credential);
+
+    final uid = auth.currentUser?.uid;
+    try{
+      final doc = store.collection("Users").doc(uid).get();
+    }catch(e){
+      store.collection("Users").doc(uid).set(
+            {
+              "name": _userGoogle!.displayName,
+              "email": _userGoogle!.email,
+              "uid": uid,
+          });
+    }
   }
 
-  Future<UserCredential> signInWithFacebook() async {
+  Future<void> signInWithFacebook() async {
     // Trigger the sign-in flow
     final LoginResult loginResult = await FacebookAuth.instance.login();
 
@@ -84,8 +107,23 @@ class AuthenticationService {
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
+    final userFB = await FacebookAuth.instance.getUserData();
+
     // Once signed in, return the UserCredential
-    return firebaseAuth.signInWithCredential(facebookAuthCredential);
+    await firebaseAuth.signInWithCredential(facebookAuthCredential);
+
+    final uid = auth.currentUser?.uid;
+    try{
+      final doc = store.collection("Users").doc(uid).get();
+    }catch(e){
+      store.collection("Users").doc(uid).set(
+            {
+              "name": userFB['name'],
+              "email": userFB['email'],
+              "uid": uid,
+          });
+    }
+    
   }
 
   Future<void> sendVerificationEmail(BuildContext context) async {
@@ -123,7 +161,7 @@ class AuthenticationService {
       await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       final uid = auth.currentUser?.uid;
-      store.collection("Users").add({
+      store.collection("Users").doc(uid).set({
         "name": username,
         "email": email,
         "uid": uid,
