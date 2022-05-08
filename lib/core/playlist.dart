@@ -4,16 +4,17 @@ import 'package:ramen_music_player/core/player.dart';
 import 'package:ramen_music_player/core/song.dart';
 
 class Playlist extends StatefulWidget {
-  const Playlist({Key? key}) : super(key: key);
+  final String ref;
+  const Playlist({Key? key, required this.ref}) : super(key: key);
 
   @override
   State<Playlist> createState() => _PlaylistState();
 }
 
 class _PlaylistState extends State<Playlist> {
-  final songsRef = FirebaseDatabase.instance.ref("songs/");
   @override
   Widget build(BuildContext context) {
+    final songsRef = FirebaseDatabase.instance.ref(widget.ref);
     return FutureBuilder<DatabaseEvent>(
         future: songsRef.once(),
         builder: (context, snapshot) {

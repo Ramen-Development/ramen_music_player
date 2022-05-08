@@ -286,7 +286,7 @@ class _PlayerState extends State<Player> {
   }
 
   void _timer() {
-    Future.delayed(Duration(seconds: 1)).then((_) {
+    Future.delayed(const Duration(seconds: 1)).then((_) {
       setState(() {});
       _timer();
     });
@@ -294,6 +294,8 @@ class _PlayerState extends State<Player> {
 }
 
 initPlaylist(List<DataSnapshot> songList) async {
+  covers = [];
+  playlist = [];
   List<AudioSource> songs = [];
   for (var s in songList) {
     Song song = Song.fromJson(s.value as Map<String, dynamic>);

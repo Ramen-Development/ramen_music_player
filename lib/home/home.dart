@@ -11,13 +11,14 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+String ref = "songs/";
+
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     context.read<AuthenticationService>().sendVerificationEmail(context);
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset('assets/images/ramendev.png'),
         title: const Text("Ramen Music Player"),
         actions: [
           IconButton(
@@ -29,8 +30,38 @@ class _HomeState extends State<Home> {
           const IconButton(onPressed: null, icon: Icon(Icons.question_mark))
         ],
       ),
-      body: const Playlist(),
+      drawer: Drawer(
+        child: ListView(
+          padding: const EdgeInsets.all(8),
+          children: [
+            const Text("Playlists:"),
+            const Divider(),
+            ListTile(
+              title: const Text("All my songs"),
+              onTap: () => setRef("songs/"),
+            ),
+            ListTile(
+              title: const Text("Nectar by Joji"),
+              onTap: () => setRef("nectar/"),
+            ),
+            ListTile(
+              title: const Text("BIMWBIY by Aries"),
+              onTap: () => setRef("believe/"),
+            ),
+          ],
+        ),
+      ),
+      body: Playlist(
+        ref: ref,
+      ),
       bottomNavigationBar: const Player(),
     );
+  }
+
+  setRef(String arg) {
+    player.stop();
+    setState(() {
+      ref = arg;
+    });
   }
 }
