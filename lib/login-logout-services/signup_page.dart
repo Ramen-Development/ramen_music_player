@@ -17,46 +17,39 @@ class SignUpPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-             Padding(
-              padding: const EdgeInsets.only(top: 15.0,right: 15.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(onPressed: () {
-                  Navigator.pop(context);
-                },
-                 icon: const Icon(Icons.keyboard_return_outlined))
-                ),
-            ),
             Padding(
-              padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+              padding: const EdgeInsets.only(top: 15.0, right: 15.0),
+              child: Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.keyboard_return_outlined))),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
               child: Center(
-                child: Container(
-                  width: 420,
-                  height: 120,
-                  /*decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(50.0)),*/
-                  child: const Text.rich(
-                    TextSpan(
-                      children: <InlineSpan>[
-                        WidgetSpan(
-                            child: Icon(
-                          Icons.library_music_outlined,
-                          color: Colors.grey,
-                          size: 60,
-                        )),
-                        TextSpan(text: ' Sign Up in Ramen Music Player'),
-                        WidgetSpan(
-                            child: Icon(
-                          Icons.library_music_outlined,
-                          color: Colors.grey,
-                          size: 60,
-                        )),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 40, color: Colors.grey),
+                child: Text.rich(
+                  TextSpan(
+                    children: <InlineSpan>[
+                      WidgetSpan(
+                          child: Icon(
+                        Icons.library_music_outlined,
+                        color: Colors.grey,
+                        size: 60,
+                      )),
+                      TextSpan(text: ' Sign Up in Ramen Music Player'),
+                      WidgetSpan(
+                          child: Icon(
+                        Icons.library_music_outlined,
+                        color: Colors.grey,
+                        size: 60,
+                      )),
+                    ],
                   ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 40, color: Colors.grey),
                 ),
               ),
             ),

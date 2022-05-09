@@ -65,10 +65,6 @@ class _PlayerState extends State<Player> {
             children: [Text(songName), Text(artist)],
           ),
         ),
-        const IconButton(
-          onPressed: null,
-          icon: Icon(Icons.heart_broken_outlined),
-        ),
       ],
     );
   }

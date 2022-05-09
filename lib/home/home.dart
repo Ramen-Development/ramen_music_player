@@ -34,6 +34,11 @@ class _HomeState extends State<Home> {
         child: ListView(
           padding: const EdgeInsets.all(8),
           children: [
+            Image.asset(
+              "assets/images/ramendev.png",
+              height: 150,
+            ),
+            const Divider(),
             const Text("Playlists:"),
             const Divider(),
             ListTile(
@@ -47,6 +52,30 @@ class _HomeState extends State<Home> {
             ListTile(
               title: const Text("BIMWBIY by Aries"),
               onTap: () => setRef("believe/"),
+            ),
+            ListTile(
+              title: const Text("Fear Inoculum by Tool"),
+              onTap: () => setRef("tool/"),
+            ),
+            ListTile(
+              title: const Text("Lost & Found by Jorja Smith"),
+              onTap: () => setRef("jorja/"),
+            ),
+            ListTile(
+              title: const Text("CARE FOR ME by Saba"),
+              onTap: () => setRef("saba/"),
+            ),
+            ListTile(
+              title: const Text("In Utero by Nirvana"),
+              onTap: () => setRef("utero/"),
+            ),
+            ListTile(
+              title: const Text("RATM"),
+              onTap: () => setRef("ratm/"),
+            ),
+            ListTile(
+              title: const Text("Blonde by Frank Ocean"),
+              onTap: () => setRef("blonde/"),
             ),
           ],
         ),
