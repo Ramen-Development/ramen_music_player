@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:ramen_music_player/core/album.dart';
 import 'package:ramen_music_player/core/song.dart';
-import 'dart:io' show Platform;
 
 class Player extends StatefulWidget {
   const Player({Key? key}) : super(key: key);
@@ -174,31 +173,27 @@ class _PlayerState extends State<Player> {
   }
 
   Row _playerConfig() {
-    if (!Platform.isAndroid) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: () => player.volume != 0
-                ? player.setVolume(0)
-                : player.setVolume(volVal),
-            icon: const Icon(Icons.volume_up),
-          ),
-          Slider(
-            value: volVal,
-            max: 1,
-            onChanged: (double value) {
-              setState(() {
-                volVal = value;
-                player.setVolume(volVal);
-              });
-            },
-          ),
-        ],
-      );
-    } else {
-      return Row();
-    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () => player.volume != 0
+              ? player.setVolume(0)
+              : player.setVolume(volVal),
+          icon: const Icon(Icons.volume_up),
+        ),
+        Slider(
+          value: volVal,
+          max: 1,
+          onChanged: (double value) {
+            setState(() {
+              volVal = value;
+              player.setVolume(volVal);
+            });
+          },
+        ),
+      ],
+    );
   }
 
   Widget _playerButton(PlayerState playerState) {
