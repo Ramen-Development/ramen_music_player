@@ -27,7 +27,6 @@ class _HomeState extends State<Home> {
             },
             icon: const Icon(Icons.logout),
           ),
-          const IconButton(onPressed: null, icon: Icon(Icons.question_mark))
         ],
       ),
       drawer: Drawer(
