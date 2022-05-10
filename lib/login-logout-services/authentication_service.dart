@@ -16,28 +16,27 @@ class AuthenticationService {
 
   Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
 
-  String getName(){
+  String getName() {
     final uid = auth.currentUser?.uid;
-    final query = store.collection("Users").where("uid", isEqualTo: uid).get().then((snapshot) => {
-      snapshot.docs[0]
-    });
+    final query = store
+        .collection("Users")
+        .where("uid", isEqualTo: uid)
+        .get()
+        .then((snapshot) => {snapshot.docs[0]});
 
     return query.toString();
-    
   }
 
   Future<void> signOut() async {
     try {
       await googleSignIn.disconnect();
     } catch (a) {
-      try{
+      try {
         await FacebookAuth.i.logOut();
-      }catch(a){}
-      
+      } catch (a) {}
     }
-    await firebaseAuth.signOut();  
+    await firebaseAuth.signOut();
     return;
-    
   }
 
   Future<String?> signInEmail(
@@ -47,7 +46,7 @@ class AuthenticationService {
     try {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      sendVerificationEmail(c);
+      // sendVerificationEmail(c);
       return "Signed in";
     } on FirebaseAuthException catch (e) {
       popSnackBar(c, e.message.toString(), "OK");
@@ -55,9 +54,8 @@ class AuthenticationService {
     }
   }
 
-    Future<String?> forgotPassword(
-      {required String email,
-      required BuildContext c}) async {
+  Future<String?> forgotPassword(
+      {required String email, required BuildContext c}) async {
     try {
       await firebaseAuth.sendPasswordResetEmail(email: email);
       popSnackBar(c, "Email sended", "OK");
@@ -87,15 +85,14 @@ class AuthenticationService {
     await firebaseAuth.signInWithCredential(credential);
 
     final uid = auth.currentUser?.uid;
-    try{
+    try {
       final doc = store.collection("Users").doc(uid).get();
-    }catch(e){
-      store.collection("Users").doc(uid).set(
-            {
-              "name": _userGoogle!.displayName,
-              "email": _userGoogle!.email,
-              "uid": uid,
-          });
+    } catch (e) {
+      store.collection("Users").doc(uid).set({
+        "name": _userGoogle!.displayName,
+        "email": _userGoogle!.email,
+        "uid": uid,
+      });
     }
   }
 
@@ -113,17 +110,15 @@ class AuthenticationService {
     await firebaseAuth.signInWithCredential(facebookAuthCredential);
 
     final uid = auth.currentUser?.uid;
-    try{
+    try {
       final doc = store.collection("Users").doc(uid).get();
-    }catch(e){
-      store.collection("Users").doc(uid).set(
-            {
-              "name": userFB['name'],
-              "email": userFB['email'],
-              "uid": uid,
-          });
+    } catch (e) {
+      store.collection("Users").doc(uid).set({
+        "name": userFB['name'],
+        "email": userFB['email'],
+        "uid": uid,
+      });
     }
-    
   }
 
   Future<void> sendVerificationEmail(BuildContext context) async {
@@ -137,7 +132,6 @@ class AuthenticationService {
       }
     }
   }
-  
 
   void popSnackBar(BuildContext context, String content, String label) {
     final snackBar = SnackBar(
@@ -166,12 +160,11 @@ class AuthenticationService {
         "email": email,
         "uid": uid,
       });
+      sendVerificationEmail(c);
       return "Signed up";
     } on FirebaseAuthException catch (e) {
       popSnackBar(c, e.message.toString(), "OK");
       return e.message.toString();
     }
   }
-
-
 }
