@@ -16,7 +16,6 @@ String ref = "songs/";
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    context.read<AuthenticationService>().sendVerificationEmail(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Ramen Music Player"),
