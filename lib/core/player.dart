@@ -1,7 +1,7 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:ramen_music_player/core/album.dart';
 import 'package:ramen_music_player/core/song.dart';
 
 class Player extends StatefulWidget {
@@ -13,7 +13,6 @@ class Player extends StatefulWidget {
 
 final player = AudioPlayer();
 List<Song> playlist = [];
-List<Album> covers = [];
 String songName = "";
 String artist = "";
 String cover = "";
@@ -289,12 +288,11 @@ class _PlayerState extends State<Player> {
   }
 }
 
-initPlaylist(List<DataSnapshot> songList) async {
-  covers = [];
+initPlaylist(List<FileSystemEntity> songList) async {
   playlist = [];
   List<AudioSource> songs = [];
   for (var s in songList) {
-    Song song = Song.fromJson(s.value as Map<String, dynamic>);
+    Song song = Song.sf(s);
     playlist.add(song);
     songs.add(AudioSource.uri(Uri.parse(song.file)));
   }
@@ -304,18 +302,7 @@ initPlaylist(List<DataSnapshot> songList) async {
     // catch load errors: 404, invalid url ...
     throw ("An error occured $error");
   });
-  await searchCovers();
   updateMetas(0);
-}
-
-searchCovers() async {
-  final albumsRef = FirebaseDatabase.instance.ref("albums/");
-  await albumsRef.once().then((value) {
-    List<DataSnapshot> albums = value.snapshot.children.toList();
-    for (DataSnapshot album in albums) {
-      covers.add(Album.fromJson(album.value as Map<String, dynamic>));
-    }
-  });
 }
 
 setSong(int idx) async {
@@ -327,5 +314,4 @@ updateMetas(int idx) {
   Song song = playlist.elementAt(idx);
   songName = song.name;
   artist = song.artist;
-  cover = covers.firstWhere((e) => e.name == song.album).cover;
 }

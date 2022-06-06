@@ -1,21 +1,21 @@
-class Song {
-  final String name;
-  final String album;
-  final String artist;
-  final String file;
+import 'dart:io';
 
-  Song._(
+class Song {
+  late String name;
+  late String album;
+  late String artist;
+  late String file;
+
+  Song(
       {required this.name,
       required this.album,
       required this.artist,
       required this.file});
 
-  factory Song.fromJson(Map<String, dynamic> json) {
-    return Song._(
-      name: json['name'],
-      album: json['album'],
-      artist: json['artist'],
-      file: json['file'],
-    );
+  Song.sf(FileSystemEntity sf) {
+    this.name = "";
+    this.album = "";
+    this.artist = "";
+    this.file = "";
   }
 }

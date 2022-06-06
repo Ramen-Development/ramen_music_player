@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:ramen_music_player/core/player.dart';
 import 'package:ramen_music_player/core/song.dart';
+import 'dart:io';
 
 class Playlist extends StatefulWidget {
   final String ref;
@@ -14,19 +14,17 @@ class Playlist extends StatefulWidget {
 class _PlaylistState extends State<Playlist> {
   @override
   Widget build(BuildContext context) {
-    final songsRef = FirebaseDatabase.instance.ref(widget.ref);
-    return FutureBuilder<DatabaseEvent>(
-        future: songsRef.once(),
+    Directory dir = Directory("/home/vandelvan/Music/");
+    return FutureBuilder<List<FileSystemEntity>>(
+        future: dir.list(recursive: true, followLinks: false).toList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            DataSnapshot snap = snapshot.data!.snapshot;
-            List<DataSnapshot> songList = snap.children.toList();
+            List<FileSystemEntity> songList = snapshot.data!;
             initPlaylist(songList);
             return ListView.builder(
                 itemCount: songList.length,
                 itemBuilder: (context, index) {
-                  Song song = Song.fromJson(
-                      songList.elementAt(index).value as Map<String, dynamic>);
+                  Song song = Song.sf(songList.elementAt(index));
                   return Column(
                     children: [
                       ListTile(
