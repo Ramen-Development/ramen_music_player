@@ -13,9 +13,9 @@ class Song {
       required this.file});
 
   Song.sf(FileSystemEntity sf) {
-    this.name = "";
+    this.name = sf.toString().split("/").last;
     this.album = "";
     this.artist = "";
-    this.file = "";
+    this.file = sf.path;
   }
 }

@@ -14,12 +14,20 @@ class Playlist extends StatefulWidget {
 class _PlaylistState extends State<Playlist> {
   @override
   Widget build(BuildContext context) {
-    Directory dir = Directory("/home/vandelvan/Music/");
+    Directory dir = Directory("/storage/emulated/0/Download");
     return FutureBuilder<List<FileSystemEntity>>(
         future: dir.list(recursive: true, followLinks: false).toList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<FileSystemEntity> songList = snapshot.data!;
+            List<FileSystemEntity> songListSnap = snapshot.data!;
+            List<FileSystemEntity> songList = [];
+            for (FileSystemEntity s in songListSnap) {
+              if (s.path.toLowerCase().endsWith(".mp3") ||
+                  s.path.toLowerCase().endsWith(".wav") ||
+                  s.path.toLowerCase().endsWith(".ogg")) {
+                songList.add(s);
+              }
+            }
             initPlaylist(songList);
             return ListView.builder(
                 itemCount: songList.length,
