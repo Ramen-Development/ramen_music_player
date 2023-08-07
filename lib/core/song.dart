@@ -18,4 +18,17 @@ class Song {
     this.artist = "";
     this.file = sf.path;
   }
+
+  Song.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        album = json['album'],
+        artist = json['artist'],
+        file = json['file'];
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'album': album,
+        'artist': artist,
+        'file': file,
+      };
 }

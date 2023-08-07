@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ramen_music_player/core/player.dart';
+import 'package:ramen_music_player/core/screens/player.dart';
 import 'package:ramen_music_player/core/song.dart';
 import 'dart:io';
+
+import '../services/indexer.dart';
 
 class Playlist extends StatefulWidget {
   final String ref;
@@ -14,7 +16,9 @@ class Playlist extends StatefulWidget {
 class _PlaylistState extends State<Playlist> {
   @override
   Widget build(BuildContext context) {
-    Directory dir = Directory("/storage/emulated/0/Download");
+    Directory dir =
+        Directory("/storage/emulated/0/Download/AvengedSevenfoldNightmareFLAC");
+
     return FutureBuilder<List<FileSystemEntity>>(
         future: dir.list(recursive: true, followLinks: false).toList(),
         builder: (context, snapshot) {
@@ -29,6 +33,11 @@ class _PlaylistState extends State<Playlist> {
               }
             }
             initPlaylist(songList);
+            List<Song> songs = [];
+            for (FileSystemEntity s in songList) {
+              songs.add(Song.sf(s));
+            }
+            Indexer.writeJson(songs);
             return ListView.builder(
                 itemCount: songList.length,
                 itemBuilder: (context, index) {

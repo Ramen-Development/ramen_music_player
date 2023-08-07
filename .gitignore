@@ -50,7 +50,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-#test audio files
+# Test audio files
 *.mp3
 
 /.vscode
