@@ -23,25 +23,20 @@ class _PlaylistState extends State<Playlist> {
         future: dir.list(recursive: true, followLinks: false).toList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<FileSystemEntity> songListSnap = snapshot.data!;
-            List<FileSystemEntity> songList = [];
-            for (FileSystemEntity s in songListSnap) {
-              if (s.path.toLowerCase().endsWith(".mp3") ||
-                  s.path.toLowerCase().endsWith(".wav") ||
-                  s.path.toLowerCase().endsWith(".ogg")) {
-                songList.add(s);
-              }
+
+            List<Song> songList = loadSongsFromJson();
+
+            //Init playlist with system files
+            List<FileSystemEntity> songListSF = [] ;
+            for (Song s in songList) {
+              songListSF.add(s.toSystemFile());
             }
-            initPlaylist(songList);
-            List<Song> songs = [];
-            for (FileSystemEntity s in songList) {
-              songs.add(Song.sf(s));
-            }
-            Indexer.writeJson(songs);
+            initPlaylist(songListSF);
+
             return ListView.builder(
                 itemCount: songList.length,
                 itemBuilder: (context, index) {
-                  Song song = Song.sf(songList.elementAt(index));
+                  Song song = songList.elementAt(index);
                   return Column(
                     children: [
                       ListTile(
@@ -63,4 +58,33 @@ class _PlaylistState extends State<Playlist> {
           }
         });
   }
+
+  void loadSongsFromDevice(){
+    Directory dir =
+        Directory("/storage/emulated/0/Download/AvengedSevenfoldNightmareFLAC");
+    List<FileSystemEntity> songListSnap = dir.listSync(recursive: true, followLinks: false);
+    List<FileSystemEntity> songList = [] ;
+    for (FileSystemEntity s in songListSnap) {
+      if (s.path.toLowerCase().endsWith(".mp3") ||
+          s.path.toLowerCase().endsWith(".wav") ||
+          s.path.toLowerCase().endsWith(".ogg")) {
+        songList.add(s);
+      }
+    }
+    saveSongsToJson(songList);
+  }
+
+  void saveSongsToJson(List<FileSystemEntity> songList) {
+    List<Song> songs = [];
+    for (FileSystemEntity s in songList) {
+      songs.add(Song.fromSystemFile(s));
+    }
+    Indexer.writeJson(songs);
+  }
+
+  List<Song> loadSongsFromJson() {
+    return Indexer.readJson();
+    
+  }
 }
+  

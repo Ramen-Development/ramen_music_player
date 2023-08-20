@@ -291,7 +291,7 @@ initPlaylist(List<FileSystemEntity> songList) async {
   playlist = [];
   List<AudioSource> songs = [];
   for (var s in songList) {
-    Song song = Song.sf(s);
+    Song song = Song.fromSystemFile(s);
     playlist.add(song);
     songs.add(AudioSource.uri(Uri.parse(song.file)));
   }

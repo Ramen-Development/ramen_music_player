@@ -12,11 +12,15 @@ class Song {
       required this.artist,
       required this.file});
 
-  Song.sf(FileSystemEntity sf) {
-    this.name = sf.toString().split("/").last;
-    this.album = "";
-    this.artist = "";
-    this.file = sf.path;
+  Song.fromSystemFile(FileSystemEntity sf) {
+    name = sf.toString().split("/").last;
+    album = "";
+    artist = "";
+    file = sf.path;
+  }
+
+  FileSystemEntity toSystemFile() {
+    return File(file);
   }
 
   Song.fromJson(Map<String, dynamic> json)
