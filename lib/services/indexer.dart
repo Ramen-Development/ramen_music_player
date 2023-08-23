@@ -4,20 +4,19 @@ import 'dart:io';
 import 'dart:convert';
 
 class Indexer {
-  static Future<void> writeJson(List<Song> songs) async {
+  static void writeJson(List<Song> songs) async {
     String jsonString = '';
     for (Song song in songs) {
       jsonString = jsonString + jsonEncode(song.toJson()) + '\n';
     }
 
     Directory? docDirectory;
-    if (Platform.isAndroid) {
-      docDirectory = await getExternalStorageDirectory();
-    } 
+    Platform.isAndroid ?
+      docDirectory = await getExternalStorageDirectory():
+      docDirectory = await getApplicationSupportDirectory();
 
-    docDirectory ??= await getApplicationSupportDirectory();
 
-    String docDirectoryFilePath = '${docDirectory.path}/json/songs.json';
+    String docDirectoryFilePath = '${docDirectory!.path}/json/songs.json';
     // Create the directory if it doesn't exist
     if (!await Directory(docDirectory.path + '/json').exists()) {
       await Directory(docDirectory.path + '/json').create(recursive: true);
@@ -32,13 +31,11 @@ class Indexer {
 
   static Future<List<Song>> readJson() async {
     Directory? docDirectory;
-    if (Platform.isAndroid) {
-      docDirectory = await getExternalStorageDirectory();
-    } 
+    Platform.isAndroid ?
+      docDirectory = await getExternalStorageDirectory():
+      docDirectory = await getApplicationSupportDirectory();
 
-    docDirectory ??= await getApplicationSupportDirectory();
-
-    String docDirectoryFilePath = '${docDirectory.path}/json/songs.json';
+    String docDirectoryFilePath = '${docDirectory!.path}/json/songs.json';
     // Create the directory if it doesn't exist
     if (!await Directory(docDirectory.path + '/json').exists()) {
       await Directory(docDirectory.path + '/json').create(recursive: true);

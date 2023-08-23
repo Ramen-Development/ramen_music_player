@@ -23,7 +23,6 @@ class _PlaylistState extends State<Playlist> {
         future: dir.list(recursive: true, followLinks: false).toList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-
             List<Song> songList = loadSongsFromJson();
 
             //Init playlist with system files
@@ -83,7 +82,9 @@ class _PlaylistState extends State<Playlist> {
   }
 
   List<Song> loadSongsFromJson() {
-    return Indexer.readJson();
+    List<Song> songs = [];
+    Indexer.readJson().then((value) => songs = value);
+    return songs;
     
   }
 }
